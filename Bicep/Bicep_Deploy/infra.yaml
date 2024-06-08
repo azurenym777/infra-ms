@@ -1,0 +1,39 @@
+trigger:
+  - none
+  
+name: Deploy Bicep files
+
+
+variables:
+  vmImageName: 'windows-2019'
+
+  azureServiceConnection: 'Bicep_service_connection'
+  location: 'East Us'
+  templateFile: 'Bicep_folder/template.bicep'
+  templateParameterFile: 'Bicep_folder/parameters.json'
+  resourceGroupName: 'bicep-template-test-rg'
+pool:
+  vmImage: $(vmImageName)
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: AzureResourceManager
+  inputs:
+    deploymentScope: 'Subscription'
+    azureResourceManagerConnection: '$(azureServiceConnection)'
+    action: 'Create Or Update Resource Group'
+    location: '$(location)'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/$(templateFile)'
+    csmParametersFile: '$(Build.SourcesDirectory)/$(templateParameterFile)'
+    deploymentMode: 'Incremental'
+    deploymentName: 'DeployPipelineTemplate'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Bicep_service_connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create --name $(resourceGroupName) --location $(location)
+      az deployment group create --resource-group $(resourceGroupName) --template-file ./modules/keyvault.bicep --parameters ./modules/parameters.json      

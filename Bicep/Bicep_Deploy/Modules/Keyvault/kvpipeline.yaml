@@ -1,0 +1,13 @@
+variables:
+  resourceGroupName: 'bicep-template-test-rg'
+  location: 'EastUS'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Bicep_service_connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create --name $(resourceGroupName) --location $(location)
+      az deployment group create --resource-group $(resourceGroupName) --template-file ./Modules/keyvault.bicep --parameters ./Modules/parameters.json

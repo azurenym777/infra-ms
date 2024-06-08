@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vaultName": {
+        "value": "bicep_KeyVault"
+      },
+      "keyName": {
+        "value": "bicep_Key"
+      },
+      "location": {
+        "value": "EastUS"
+      },
+      "skuName": {
+        "value": "standard"
+      },
+      "keyType": {
+        "value": "RSA"
+      },
+      "keyOps": {
+        "value": []
+      },
+      "keySize": {
+        "value": 2048
+      },
+      "curveName": {
+        "value": ""
+      }
+    }
+  }
+  
